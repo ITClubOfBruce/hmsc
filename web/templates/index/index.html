@@ -9,8 +9,8 @@
                     <h5>营收概况</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins"></h1>
-                    <small>近30日新增：</small>
+                    <h1 class="no-margins">{{ data.finance.today }}</h1>
+                    <small>近30日新增：{{ data.finance.month }}</small>
                 </div>
             </div>
         </div>
@@ -21,8 +21,8 @@
                     <h5>订单</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins"></h1>
-                    <small>近30日：</small>
+                    <h1 class="no-margins">{{ data.order.today }}</h1>
+                    <small>近30日：{{ data.order.month }}</small>
                 </div>
             </div>
         </div>
@@ -33,9 +33,9 @@
                     <h5>会员</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins"></h1>
-                    <small>今日新增：</small>
-                    <small>近30日新增：</small>
+                    <h1 class="no-margins">{{ data.member.total }}</h1>
+                    <small>今日新增：{{ data.member.today_new }}</small>
+                    <small>近30日新增：{{ data.member.month_new }}</small>
                 </div>
             </div>
         </div>
@@ -46,8 +46,8 @@
                     <h5>分享</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins"></h1>
-                    <small>近30日：</small>
+                    <h1 class="no-margins">{{ data.shared.today }}</h1>
+                    <small>近30日：{{ data.shared.month }}</small>
                 </div>
             </div>
         </div>
