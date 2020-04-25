@@ -66,8 +66,8 @@ def logout():
 
 @router_user.route("/edit")
 def edit():
-    return "编辑"
+    return ops_render("user/edit.html")
 
 @router_user.route("/reset-pwd")
 def resetPwd():
-    return "重置密码"
+    return ops_render("user/reset_pwd.html")
