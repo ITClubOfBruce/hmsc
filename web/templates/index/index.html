@@ -54,19 +54,19 @@
     </div>
     <div class="row">
         <div class="col-lg-12" id="member_order" style="height: 400px;border: 1px solid #e6e6e6;padding-top: 20px;">
-            使用highchart画图
             <div id="container" style="min-width:400px;height:400px"></div>
         </div>
         <div class="col-lg-12" id="finance" style="height: 400px;border: 1px solid #e6e6e6;padding-top: 20px;">
-            使用highchart画图
+            <div id="main" style="width: 600px;height:400px;"></div>
         </div>
     </div>
 </div>
 {% endblock %}
 {% block js %}
 <script src="{{ buildStaticUrl('/plugins/highcharts/highcharts.js') }}"></script>
-<script src="{{ buildStaticUrl('/js/chart.js') }}"></script>
+<script src="{{ buildStaticUrl('/plugins/echarts/echarts.min.js') }}"></script>
 <script src="{{ buildStaticUrl('/js/index/index.js') }}"></script>
+<script src="https://cdn.bootcss.com/echarts/4.7.0/echarts.min.js"></script>
 <script>
     var chart = Highcharts.chart('container', {
         chart: {
@@ -130,6 +130,33 @@
             }, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
         }]
     });
+</script>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: '百度ECharts'
+        },
+        tooltip: {},
+        legend: {
+            data:['销量']
+        },
+        xAxis: {
+            data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+        },
+        yAxis: {},
+        series: [{
+            name: '销量',
+            type: 'bar',
+            data: [5, 20, 36, 10, 10, 20]
+        }]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
 </script>
 {% endblock %}
 
