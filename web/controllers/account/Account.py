@@ -78,11 +78,12 @@ def set():
         resp['msg'] = "请输入符合规范的密码"
         return jsonify(resp)
     
-    is_exsits = User.query.filter(User.login_name == login_name).first()
+    is_exsits = User.query.filter(User.login_name == login_name,User.uid != id).first()
     if is_exsits:
         resp['code'] = -1
         resp['msg'] = "该登录名已经存在，请更换"
         return jsonify(resp)
+    
     user_info = User.query.filter_by(uid = id).first()
     if user_info:
         model_user = user_info
@@ -90,11 +91,16 @@ def set():
         model_user = User()
         model_user.created_time = getCurrentDate()
         model_user.login_salt = UserService.generateSalt()
+
     model_user.nickname = nickname
     model_user.mobile = mobile
     model_user.email = email
     model_user.login_name = login_name
-
+    if user_info and user_info.uid == 1:
+        resp['code'] = -1
+        resp['msg'] = "该用户为Bruce，不允许修改"
+        return jsonify(resp)
+    model_user.login_pwd = UserService.generatePwd(login_pwd,model_user.login_salt)
     model_user.updated_time = getCurrentDate()
     
     db.session.add(model_user)
