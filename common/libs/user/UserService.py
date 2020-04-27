@@ -1,7 +1,7 @@
 import hashlib,base64
 class UserService():
     
-    # 结合salt和md5 生成新的密码
+    # 结合salt和md5 生成加密的密码
     @staticmethod
     def generatePwd(pwd,salt):
         m = hashlib.md5()
