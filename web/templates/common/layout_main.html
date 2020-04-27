@@ -77,13 +77,13 @@
                             <ul class="dropdown-menu dropdown-messages">
                                 <li>
                                     <div class="dropdown-messages-box">
-                                        姓名：张三<a href="{{ buildUrl('/user/edit') }}" class="pull-right">编辑</a>
+                                        姓名：{{ current_user.nickname }}<a href="{{ buildUrl('/user/edit') }}" class="pull-right">编辑</a>
                                     </div>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
                                     <div class="dropdown-messages-box">
-                                        手机号码：13933746521
+                                        手机号码：{{ current_user.mobile }}
                                     </div>
                                 </li>
                                 <li class="divider"></li>
