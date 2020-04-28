@@ -9,15 +9,14 @@
                     <select name="status" class="form-control inline">
                         <option value="-1">请选择状态</option>
                         {% for select_key in status %}
-                        <option value="{{ select_key }}" {% if select_key == 
-                             %}>{{ status[select_key] }}</option>
+                        <option value="{{ select_key }}">{{ status[select_key] }}</option>
                         {% endfor %}
                     </select>
                 </div>
 
                 <div class="form-group">
                     <div class="input-group">
-                        <!-- <input type="text" name="mix_kw" placeholder="请输入姓名或者手机号码" class="form-control" value=""> -->
+                        <input type="text" name="mix_kw" placeholder="请输入姓名或者手机号码" class="form-control" value="">
                         <!-- <input type="hidden" name="p" value=""> -->
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-primary search">
@@ -82,6 +81,7 @@
             </tbody>
         </table>
         <!--分页代码已被封装到统一模板文件中-->
+        {% include 'common/pagenation.html' %}
     </div>
 </div>
 {% endblock %}

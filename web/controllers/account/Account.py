@@ -1,7 +1,8 @@
 from flask import Blueprint,request,redirect,jsonify
 
-from application import db
-from common.libs.Helper import ops_render,getCurrentDate
+from application import app,db
+from sqlalchemy import or_
+from common.libs.Helper import ops_render,getCurrentDate,iPagination
 from common.libs.UrlManager import UrlManager
 from common.libs.user.UserService import UserService
 from common.models.User import User
@@ -12,16 +13,32 @@ router_account = Blueprint("account_page",__name__)
 def index():
     resp_data = {}
     req = request.values
+    page = int(req['p']) if ('p' in req and req['p']) else 1
     query = User.query
     if 'status' in req and int(req['status']) > -1:
         query = query.filter(User.status == int(req['status']))
+    if 'mix_kw' in req:
+        rule = or_( User.nickname.ilike("%{0}%".format(req['mix_kw'])),User.mobile.ilike("%{0}%".format(req['mix_kw'])) )
+        query = query.filter(rule)
+    
+    params = {
+        'total':query.count(),
+        'page':page,
+        'page_size':app.config['PAGE_SIZE'],
+        'url':request.full_path.replace("&p={}".format(page),"")
+    }
+    # 分页的三大关键字
+    pages = iPagination(params)
+    offset = (page-1)*app.config['PAGE_SIZE']
+    limit = page*app.config['PAGE_SIZE']
 
-    list = query.all()
+    list = query.all()[offset:limit]
     resp_data['list'] = list 
     resp_data['status'] = {
         "1":"正常",
         "0":"已删除"
     }
+    resp_data['pages'] = pages
     return ops_render('account/index.html',resp_data)
 
 @router_account.route('/info')
@@ -120,36 +137,39 @@ def set():
 @router_account.route('removeOrRecover',methods=["GET","POST"])
 def removeOrRecover():
     resp = {
-        'code':-1,
+        'code':200,
         'msg':'操作成功',
         'data':{}
     }
     req = request.values
     id = req['id'] if 'id' in req else 0
     acts = req['acts'] if 'acts' in req else ''
+    if not id:
+        resp['code'] = -1
+        resp['msg'] = "未操作操作账号"
+        return jsonify(resp)
     if acts not in ['remove','recover']:
         resp['code'] = -1
         resp['msg'] = "操作有误"
         return jsonify(resp)
     
-    if id:
-        user_info = User.query.filter_by(uid=id).first()
-        if not user_info:
-            resp['code'] = -1
-            resp['msg'] = "指定的账号不存在"
-            return jsonify(resp)
-        if user_info and user_info.uid == 1:
-            resp['code'] = -1
-            resp['msg'] = "该用户为Bruce，不能操作账号"
-            return jsonify(resp)
-        if acts == "remove":
-            user_info.status = 0
-        elif acts == "recover":
-            user_info.status = 1
+    user_info = User.query.filter_by(uid=id).first()
+    if not user_info:
+        resp['code'] = -1
+        resp['msg'] = "指定的账号不存在"
+        return jsonify(resp)
+    if user_info and user_info.uid == 1:
+        resp['code'] = -1
+        resp['msg'] = "该用户为Bruce，不能操作账号"
+        return jsonify(resp)
+    if acts == "remove":
+        user_info.status = 0
+    elif acts == "recover":
+        user_info.status = 1
         
-        user_info.updated_time = getCurrentDate()
-        db.session.add(user_info)
-        db.session.commit()
+    user_info.updated_time = getCurrentDate()
+    db.session.add(user_info)
+    db.session.commit()
     return jsonify(resp)
 
 
