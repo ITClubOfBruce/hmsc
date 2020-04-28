@@ -8,16 +8,17 @@
                 <div class="form-group">
                     <select name="status" class="form-control inline">
                         <option value="-1">请选择状态</option>
-                        {% for tmp_key in status_mapping %}
-                        <option value="{{ tmp_key }}" {% if tmp_key == search_con['status']  %} selected {% endif %}>{{  status_mapping[ tmp_key ] }}</option>
+                        {% for select_key in status %}
+                        <option value="{{ select_key }}" {% if select_key == 
+                             %}>{{ status[select_key] }}</option>
                         {% endfor %}
                     </select>
                 </div>
 
                 <div class="form-group">
                     <div class="input-group">
-                        <input type="text" name="mix_kw" placeholder="请输入姓名或者手机号码" class="form-control" value="">
-                        <input type="hidden" name="p" value="">
+                        <!-- <input type="text" name="mix_kw" placeholder="请输入姓名或者手机号码" class="form-control" value=""> -->
+                        <!-- <input type="hidden" name="p" value=""> -->
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-primary search">
                                 <i class="fa fa-search"></i>搜索
