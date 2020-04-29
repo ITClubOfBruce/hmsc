@@ -3,6 +3,7 @@ from flask import Blueprint,request,redirect,jsonify
 from common.libs.Helper import ops_render,iPagination,getCurrentDate
 from common.libs.UrlManager import UrlManager
 from common.models.member.Member import Member
+from common.models.member.MemberComments import MemberComment
 from application import app,db
 router_member = Blueprint( 'member_page',__name__ )
 
@@ -105,7 +106,7 @@ def comment():
     resp_data = {}
     req = request.args
     page = int(req['p']) if ('p' in req and req['p']) else 1
-    query = MemberComments.query
+    query = MemberComment.query
 
     page_params = {
         'total': query.count(),
@@ -116,10 +117,16 @@ def comment():
 
     pages = iPagination(page_params)
     offset = (page - 1) * app.config['PAGE_SIZE']
-    resp_data['list'] = data_list
-    resp_data['pages'] = pages
-    resp_data['current'] = 'comment'
 
+    comment_list = query.all()
+    resp_data['list'] = comment_list
+    member_info = {
+        'avatar':"",
+        'nickname':"Bruce"
+    }
+    for item in comment_list:
+        item.member_info = member_info
+    resp_data['pages'] = pages
     return ops_render( "member/comment.html",resp_data )
 
 
