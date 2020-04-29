@@ -43,8 +43,8 @@
             <tr>
                 <td><img alt="image" class="img-circle" src="{{ item.avatar }}" style="width: 40px;height: 40px;"></td>
                 <td>{{ item.nickname }}</td>
-                <td>{{ item.sex_desc }}</td>
-                <td>{{ item.status_desc }}</td>
+                <td>{{ item.sex }}</td>
+                <td>{{ item.status }}</td>
                 <td>
                     <a href="{{ buildUrl('/member/info') }}?id={{  item.id }}">
                         <i class="fa fa-eye fa-lg"></i>
@@ -72,7 +72,7 @@
             </tbody>
         </table>
         <!--分页代码已被封装到统一模板文件中-->
-        
+        {% include 'common/pagenation.html' %}
     </div>
 </div>
 {% endblock %}
