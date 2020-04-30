@@ -1,173 +1,92 @@
 ;
-var upload = {
-    error: function (msg) {
-        common_ops.alert(msg);
+
+var goods_set_ops = {
+    init:function(){
+        this.eventBind()
     },
-    success: function (file_key) {
-        if (!file_key) {
-            return;
-        }
-        var html = '<img src="' + common_ops.buildPicUrl(file_key) + '"/>'
-                + '<span class="fa fa-times-circle del del_image" data="' + file_key + '"></span>';
-
-        if ($(".upload_pic_wrap .pic-each").size() > 0) {
-            $(".upload_pic_wrap .pic-each").html(html);
-        } else {
-            $(".upload_pic_wrap").append('<span class="pic-each">' + html + '</span>');
-        }
-        food_set_ops.delete_img();
-    }
-};
-var food_set_ops = {
-    init: function () {
-        this.ue = null;
-        this.eventBind();
-        this.initEditor();
-        this.delete_img();
-    },
-    eventBind: function () {
-        var that = this;
-
-        $(".wrap_food_set .upload_pic_wrap input[name=pic]").change(function () {
-            $(".wrap_food_set .upload_pic_wrap").submit();
-        });
-
-        $(".wrap_food_set select[name=cat_id]").select2({
-            language: "zh-CN",
-            width: '100%'
-        });
-
-        $(".wrap_food_set input[name=tags]").tagsInput({
-            width: 'auto',
-            height: 40,
-            onAddTag: function (tag) {
-            },
-            onRemoveTag: function (tag) {
-            }
-        });
-
-        $(".wrap_food_set .save").click(function () {
-            var btn_target = $(this);
+    eventBind:function(){
+        var that = this
+        $(".wrap_goods_set .save").click(function(){
+            var btn_target = $(this)
             if (btn_target.hasClass("disabled")) {
-                common_ops.alert("正在处理!!请不要重复提交~~");
-                return;
+                alert("请求正在进行，请稍后再试")
+                return
             }
-
-            var cat_id_target = $(".wrap_food_set select[name=cat_id]");
-            var cat_id = cat_id_target.val();
-
-            var name_target = $(".wrap_food_set input[name=name]");
-            var name = name_target.val();
-
-            var price_target = $(".wrap_food_set input[name=price]");
-            var price = price_target.val();
-
-            var summary = $.trim(that.ue.getContent());
-
-            var stock_target = $(".wrap_food_set input[name=stock]");
-            var stock = stock_target.val();
-
-            var tags_target = $(".wrap_food_set input[name=tags]");
-            var tags = $.trim(tags_target.val());
-
-            if (parseInt(cat_id) < 1) {
-                common_ops.tip("请选择分类~~", cat_id_target);
-                return;
+            var cat_id_target_value = $(".wrap_goods_set input[name=cat_id]").val()
+            var name_target_value = $(".wrap_goods_set input[name=name]").val()
+            var price_target_value = $(".wrap_goods_set input[name=price]").val()
+            var summary = $.trim("dddddddddddddd")
+            var stock_target_value = $(".wrap_goods_set input[name=stock]").val()
+            var tags_target_value = $.trim($(".wrap_goods_set input[name=tags]").val())
+            if ( parseInt(cat_id_target_value) < 1 ) {
+                alert("请选择分类")
+                return
             }
-
-            if (name.length < 1) {
-                common_ops.alert("请输入符合规范的名称~~");
-                return;
+            if (name_target_value.length < 1) {
+                alert("请输入符合规范的名称")
+                return false;
             }
-
-            if (parseFloat(price) <= 0) {
-                common_ops.tip("请输入符合规范的售卖价格~~", price_target);
-                return;
+            if ( parseInt(price_target_value) < 1 ) {
+                alert("请输入符合规范的售价")
+                return
             }
-
-            if ($(".wrap_food_set .pic-each").size() < 1) {
-                common_ops.alert("请上传封面图~~");
-                return;
+            if ($(".wrap_goods_set .pic-each").length < 1) {
+                alert("请上传封面")
+                return
             }
-
             if (summary.length < 10) {
-                common_ops.tip("请输入描述，并不能少于10个字符~~", price_target);
-                return;
+                alert("请输入描述，不少于10个字符")
+                return false;
+            }
+            if ( parseInt(stock_target_value) < 1 ) {
+                alert("请输入符合规范的库存")
+                return
+            }
+            if (tags_target_value.length < 1) {
+                alert("请输入标签，便于搜索")
+                return
             }
 
-            if (parseInt(stock) < 1) {
-                common_ops.tip("请输入符合规范的库存量~~", stock_target);
-                return;
-            }
-
-            if (tags.length < 1) {
-                common_ops.alert("请输入标签，便于搜索~~");
-                return;
-            }
-
-            btn_target.addClass("disabled");
+            btn_target.addClass("disabled")
+            
 
             var data = {
-                cat_id: cat_id,
-                name: name,
-                price: price,
-                main_image: $(".wrap_food_set .pic-each .del_image").attr("data"),
-                summary: summary,
-                stock: stock,
-                tags: tags,
-                id: $(".wrap_food_set input[name=id]").val()
-            };
-
+                cat_id:cat_id_target_value,
+                name:name_target_value,
+                price:price_target_value,
+                main_image:$(".wrap_goods_set .pic-each .del_image").attr("data"),
+                summary:summary,
+                stock:stock_target_value,
+                tags:tags_target_value,
+                id:$(".wrap_goods_set input[name=id]").val()
+            }
             $.ajax({
-                url: common_ops.buildUrl("/food/set"),
-                type: 'POST',
-                data: data,
-                dataType: 'json',
-                success: function (res) {
-                    btn_target.removeClass("disabled");
-                    var callback = null;
-                    if (res.code == 200) {
-                        callback = function () {
-                            window.location.href = common_ops.buildUrl("/food/index");
-                        }
+                url:common_ops.buildUrl("/goods/set"),
+                type:"POST",
+                data:data,
+                dataType:"json",
+                success:function(resp){
+                    console.log(resp.msg)
+                    btn_target.removeClass("disabled")
+                    if(resp.code == 200){
+                        window.location.href = common_ops.buildUrl("/goods/index")
                     }
-                    common_ops.alert(res.msg, callback);
+                },
+                error:function(error){
+                    console.log(error)
                 }
-            });
-
-        });
-
+            })
+        })
+    },
+    initEditor:function(){
 
     },
-    initEditor: function () {
-        var that = this;
-        that.ue = UE.getEditor('editor', {
-            toolbars: [
-                ['undo', 'redo', '|',
-                    'bold', 'italic', 'underline', 'strikethrough', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', '|', 'rowspacingtop', 'rowspacingbottom', 'lineheight'],
-                ['customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
-                    'directionalityltr', 'directionalityrtl', 'indent', '|',
-                    'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
-                    'link', 'unlink'],
-                ['imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
-                    'insertimage', 'insertvideo', '|',
-                    'horizontal', 'spechars', '|', 'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols']
+    delete_img:function(){
 
-            ],
-            enableAutoSave: true,
-            saveInterval: 60000,
-            elementPathEnabled: false,
-            zIndex: 4,
-            serverUrl: common_ops.buildUrl('/upload/ueditor')
-        });
-    },
-    delete_img: function () {
-        $(".wrap_food_set .del_image").unbind().click(function () {
-            $(this).parent().remove();
-        });
     }
-};
+}
 
-$(document).ready(function () {
-    food_set_ops.init();
-});
+
+$(document).ready(function(){
+    goods_set_ops.init()
+})
