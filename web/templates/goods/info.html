@@ -14,16 +14,16 @@
                     <a class="btn btn-outline btn-primary pull-right" href="{{ buildUrl('/goods/set') }}?id={{ info.id }}">
                         <i class="fa fa-pencil"></i>编辑
                     </a>
-                    <h2>美食信息</h2>
+                    <h2>商品信息</h2>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <p class="m-t">美食名：{{ info.name }}</p>
+                <p class="m-t">商品名：{{ info.name }}</p>
                 <p>售价：{{ info.price }}</p>
                 <p>库存总量：{{ info.stock }}</p>
-                <p>图书标签：{{ info.tags }}</p>
+                <p>商品标签：{{ info.tags }}</p>
                 <p>封面图：<img src="{{ buildImageUrl( info.main_image ) }}" style="width: 50px;height: 50px;"></p>
                 <p>描述：</p>
                 <p>{{ info.summary | safe }}</p>
